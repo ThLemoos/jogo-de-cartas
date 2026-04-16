@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jogo de Cartas</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <div id="game">
+
+        <header id="header">
+            <div id="info-left">
+                <div class="player-tag cpu-tag">
+                    <span class="dot" id="cpu-dot"></span>
+                    CPU
+                    <span class="card-count" id="cpu-count">0</span>
+                </div>
+            </div>
+            <div id="color-display">
+                <span id="active-color-pill">—</span>
+            </div>
+            <div id="info-right">
+                <button id="restart-btn" onclick="initGame()">↺</button>
+            </div>
+        </header>
+
+        <div id="status-bar">
+            <span id="status">Carregando...</span>
+        </div>
+
+        <section id="cpu-area">
+            <div id="cpu-hand"></div>
+        </section>
+
+        <section id="table-area">
+            <div id="draw-pile" onclick="playerDraw()">
+                <div class="pile-inner">🂠</div>
+                <span class="pile-label">Comprar</span>
+            </div>
+            <div id="discard-zone"></div>
+        </section>
+
+        <section id="player-area">
+            <div class="player-tag" id="player-tag-label">
+                <span class="dot" id="player-dot"></span>
+                Você
+                <span class="card-count" id="player-count">0</span>
+            </div>
+            <div id="player-hand"></div>
+            <div id="uno-wrap">
+                <button id="uno-btn" onclick="callUno()">UNO!</button>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="overlay" style="display:none">
+        <div id="color-picker">
+            <p>Escolha uma cor</p>
+            <div class="swatches">
+                <button class="swatch" style="background:#e74c3c" onclick="pickColor('red')"
+                    aria-label="Vermelho"></button>
+                <button class="swatch" style="background:#27ae60" onclick="pickColor('green')"
+                    aria-label="Verde"></button>
+                <button class="swatch" style="background:#2980b9" onclick="pickColor('blue')"
+                    aria-label="Azul"></button>
+                <button class="swatch" style="background:#f39c12" onclick="pickColor('yellow')"
+                    aria-label="Amarelo"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
