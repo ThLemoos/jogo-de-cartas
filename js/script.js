@@ -4,20 +4,46 @@ const COLOR_CSS = { red: '#e74c3c', green: '#27ae60', blue: '#2980b9', yellow: '
 const COLOR_PT = { red: 'Vermelho', green: 'Verde', blue: 'Azul', yellow: 'Amarelo' };
 const ICONS = { Skip: '⊘', Reverse: '⇄', '+2': '+2', Wild: '★', 'Wild+4': '★+4' };
 
+// ===== CONFIGURAÇÃO DA ZOEIRA (edite à vontade) =====
+const TOTAL_FOTOS = 9;            // img/foto1.jpg ... img/foto9.jpg
+const FOTO_CORINGA = 1;           // foto das cartas Wild (touca colorida)
+const FOTO_CORINGA_4 = 8;         // foto das cartas Wild+4 (close dramático)
+const FOTO_FIM = [5, 9, 7, 6];    // fotos que aparecem na tela final
+const MSG_VITORIA = [
+    'Você ganhou! Agora ela que vai ter que aceitar a derrota 😎',
+    'Vitória sua! Foi por pouco... de novo 😏',
+    'Ganhou! Pode pedir o prêmio 🍦',
+];
+const MSG_DERROTA = [
+    'Perdeu pra ela... até no jogo ela manda em você 😂',
+    'A CPU ganhou, mas a estrela do jogo é ela mesmo ✨',
+    'Derrota! Pode ir pedir desculpa pra ela 🙈',
+];
+const fotoUrl = n => `img/foto${n}.jpg`;
+const rand = arr => arr[Math.floor(Math.random() * arr.length)];
+
 let deck, discard, playerHand, cpuHand;
 let currentColor, currentValue;
 let isPlayerTurn, pendingWild, unoCalled, animLock;
 
 function buildDeck() {
     const d = [];
+    // cada carta recebe uma foto; sorteio "em rodadas" pra todas aparecerem igualmente
+    let pool = [];
+    const nextFoto = () => {
+        if (pool.length === 0) {
+            pool = shuffle(Array.from({ length: TOTAL_FOTOS }, (_, i) => i + 1));
+        }
+        return pool.pop();
+    };
     for (const color of COLORS) {
         for (const value of VALUES) {
-            d.push({ color, value });
-            if (value !== '0') d.push({ color, value });
+            d.push({ color, value, foto: nextFoto() });
+            if (value !== '0') d.push({ color, value, foto: nextFoto() });
         }
     }
-    for (let i = 0; i < 4; i++) d.push({ color: 'black', value: 'Wild' });
-    for (let i = 0; i < 4; i++) d.push({ color: 'black', value: 'Wild+4' });
+    for (let i = 0; i < 4; i++) d.push({ color: 'black', value: 'Wild', foto: FOTO_CORINGA });
+    for (let i = 0; i < 4; i++) d.push({ color: 'black', value: 'Wild+4', foto: FOTO_CORINGA_4 });
     return d;
 }
 
@@ -134,7 +160,9 @@ function renderDiscard(animate = false, fromCpu = false) {
     const top = discard[discard.length - 1];
     zone.innerHTML = '';
     const el = makeCardEl(top);
-    el.style.cursor = 'default';
+    el.style.cursor = 'zoom-in';
+    el.title = 'Clique para ver a foto em tamanho grande';
+    el.addEventListener('click', () => openZoom(top));
 
     const rot = (Math.random() * 22 - 11).toFixed(1);
 
@@ -168,15 +196,19 @@ function makeCardEl(card) {
     const el = document.createElement('div');
     el.className = 'card';
 
-    const bg = card.color === 'black' ? '#2c3e50' : COLOR_CSS[card.color];
     const txt = isNaN(card.value) ? (ICONS[card.value] || card.value) : card.value;
 
-    el.style.background = bg;
+    if (card.color === 'black') {
+        el.classList.add('wild');
+    } else {
+        el.style.background = COLOR_CSS[card.color];
+        el.style.setProperty('--card-color', COLOR_CSS[card.color]);
+    }
+    el.dataset.foto = card.foto;
     el.innerHTML = `
+        <div class="photo" style="background-image:url('${fotoUrl(card.foto)}')"></div>
         <span class="corner tl">${txt}</span>
-        <div class="oval"></div>
         <span class="val">${txt}</span>
-        <span class="corner br">${txt}</span>
     `;
     return el;
 }
@@ -508,6 +540,7 @@ function endGame(winner) {
     } else {
         setStatus('CPU ganhou! Clique em ↺ para tentar de novo.');
     }
+    setTimeout(() => showEnd(winner), 700);
     document.querySelectorAll('#player-hand .card.playable').forEach(c => {
         c.classList.remove('playable');
         c.classList.add('unplayable');
@@ -516,6 +549,27 @@ function endGame(winner) {
 
 function setStatus(msg) {
     document.getElementById('status').textContent = msg;
+}
+
+function showEnd(winner) {
+    document.getElementById('end-photo').style.backgroundImage = `url('${fotoUrl(rand(FOTO_FIM))}')`;
+    document.getElementById('end-title').textContent = winner === 'player' ? '🎉 VOCÊ GANHOU!' : '😂 VOCÊ PERDEU!';
+    document.getElementById('end-msg').textContent = rand(winner === 'player' ? MSG_VITORIA : MSG_DERROTA);
+    document.getElementById('end-overlay').style.display = 'flex';
+}
+
+function playAgain() {
+    document.getElementById('end-overlay').style.display = 'none';
+    initGame();
+}
+
+function openZoom(card) {
+    document.getElementById('zoom-photo').style.backgroundImage = `url('${fotoUrl(card.foto)}')`;
+    document.getElementById('zoom-overlay').style.display = 'flex';
+}
+
+function closeZoom() {
+    document.getElementById('zoom-overlay').style.display = 'none';
 }
 
 window.addEventListener('DOMContentLoaded', initGame);
