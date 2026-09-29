@@ -6,18 +6,20 @@ const ICONS = { Skip: '⊘', Reverse: '⇄', '+2': '+2', Wild: '★', 'Wild+4': 
 
 // ===== CONFIGURAÇÃO DA ZOEIRA (edite à vontade) =====
 const TOTAL_FOTOS = 9;            // img/foto1.jpg ... img/foto9.jpg
-const FOTO_CORINGA = 1;           // foto das cartas Wild (touca colorida)
-const FOTO_CORINGA_4 = 8;         // foto das cartas Wild+4 (close dramático)
-const FOTO_FIM = [5, 9, 7, 6];    // fotos que aparecem na tela final
+const FOTO_CORINGA = 1;           
+const FOTO_CORINGA_4 = 8;        
+const FOTO_FIM = [5, 9, 7, 6];    
 const MSG_VITORIA = [
-    'Você ganhou! Agora ela que vai ter que aceitar a derrota 😎',
-    'Vitória sua! Foi por pouco... de novo 😏',
-    'Ganhou! Pode pedir o prêmio 🍦',
+    'Ganhou! Agora vai ficar se achando o resto do dia, né?',
+    'Venceu por sorte, mas vamos fingir que foi talento.',
+    'Ganhou! Pode pedir o prêmio',
+    'Parabéns! Mas lebre-se que foi eu que deixei!'
 ];
 const MSG_DERROTA = [
-    'Perdeu pra ela... até no jogo ela manda em você 😂',
-    'A CPU ganhou, mas a estrela do jogo é ela mesmo ✨',
-    'Derrota! Pode ir pedir desculpa pra ela 🙈',
+    'Perdeu pra uma CPU! Que vergonha, Sandy!!!',
+    'Perdeu! Mas pelo menos as cartas estavam com A SUA CARA',
+    'Derrota! Muito fraquinha, Sandy! Melhore!',
+    'Perdeu de novo... vai ficar brabinha agora?'
 ];
 const fotoUrl = n => `img/foto${n}.jpg`;
 const rand = arr => arr[Math.floor(Math.random() * arr.length)];
