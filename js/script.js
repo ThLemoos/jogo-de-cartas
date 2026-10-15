@@ -21,12 +21,19 @@ const MSG_DERROTA = [
     'Derrota! Muito fraquinha, Sandy! Melhore!',
     'Perdeu de novo... vai ficar brabinha agora?'
 ];
+const MSG_DERROTA_ONLINE = [
+    'Perdeu! Quem mandou subestimar o adversário?',
+    'Derrota! As cartas estavam com A SUA CARA mesmo',
+    'Perdeu! Vai pedir revanche ou vai chorar?',
+    'Perdeu de novo... vai ficar brabinha agora?'
+];
 const fotoUrl = n => `img/foto${n}.jpg`;
 const rand = arr => arr[Math.floor(Math.random() * arr.length)];
 
 let deck, discard, playerHand, cpuHand;
 let currentColor, currentValue;
 let isPlayerTurn, pendingWild, unoCalled, animLock;
+let MODE = 'lobby';   // 'lobby' | 'cpu' | 'online'  (modo online: veja js/online.js)
 
 function buildDeck() {
     const d = [];
@@ -263,6 +270,7 @@ function animateCardsToHand(cards, targetId, stagger = 160) {
 }
 
 function playCard(idx) {
+    if (MODE === 'online') return onlinePlayCard(idx);
     if (!isPlayerTurn || animLock) return;
     const card = playerHand[idx];
     if (!canPlay(card)) return;
@@ -317,6 +325,7 @@ function playCard(idx) {
 }
 
 function playerDraw() {
+    if (MODE === 'online') return onlineDraw();
     if (!isPlayerTurn || animLock) return;
 
     animLock = true;
@@ -335,6 +344,7 @@ function playerDraw() {
 }
 
 function pickColor(col) {
+    if (MODE === 'online') return onlinePickColor(col);
     document.getElementById('overlay').style.display = 'none';
     currentColor = col;
 
@@ -367,10 +377,11 @@ function pickColor(col) {
 }
 
 function cpuTurn() {
-    if (isPlayerTurn || animLock) return;
+    if (MODE !== 'cpu' || isPlayerTurn || animLock) return;
     animLock = true;
 
     setTimeout(() => {
+        if (MODE !== 'cpu') { animLock = false; return; }
         const playable = cpuHand.filter(c => canPlay(c));
 
         if (playable.length > 0) {
@@ -518,6 +529,7 @@ function applyEffect(card, by) {
 }
 
 function callUno() {
+    if (MODE === 'online') return onlineUno();
     if (playerHand.length === 2) {
         unoCalled = true;
         setStatus('UNO!');
@@ -556,12 +568,13 @@ function setStatus(msg) {
 function showEnd(winner) {
     document.getElementById('end-photo').style.backgroundImage = `url('${fotoUrl(rand(FOTO_FIM))}')`;
     document.getElementById('end-title').textContent = winner === 'player' ? '🎉 VOCÊ GANHOU!' : '😂 VOCÊ PERDEU!';
-    document.getElementById('end-msg').textContent = rand(winner === 'player' ? MSG_VITORIA : MSG_DERROTA);
+    document.getElementById('end-msg').textContent = rand(winner === 'player' ? MSG_VITORIA : (MODE === 'online' ? MSG_DERROTA_ONLINE : MSG_DERROTA));
     document.getElementById('end-overlay').style.display = 'flex';
 }
 
 function playAgain() {
     document.getElementById('end-overlay').style.display = 'none';
+    if (MODE === 'online') return onlinePlayAgain();
     initGame();
 }
 
@@ -574,4 +587,9 @@ function closeZoom() {
     document.getElementById('zoom-overlay').style.display = 'none';
 }
 
-window.addEventListener('DOMContentLoaded', initGame);
+function restartClicked() {
+    if (MODE === 'online') return onlineRestart();
+    initGame();
+}
+
+window.addEventListener('DOMContentLoaded', () => showLobby());

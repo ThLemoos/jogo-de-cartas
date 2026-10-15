@@ -1,9 +1,11 @@
-const CACHE = 'jogo-de-cartas-v1';
+const CACHE = 'jogo-de-cartas-v2';
 const ARQUIVOS = [
   './',
   './index.html',
   './style.css',
   './js/script.js',
+  './js/online.js',
+  './js/peerjs.min.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
@@ -33,8 +35,10 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  // só mexe em arquivos do próprio site (nunca nas chamadas do PeerJS)
+  if (new URL(e.request.url).origin !== self.location.origin) return;
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
+    caches.match(e.request, { ignoreSearch: true }).then(cached => cached || fetch(e.request).then(res => {
       const copia = res.clone();
       caches.open(CACHE).then(c => c.put(e.request, copia));
       return res;

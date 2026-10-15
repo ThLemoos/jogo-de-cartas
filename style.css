@@ -782,3 +782,142 @@ body {
         min-width: 30px;
     }
 }
+
+/* ===== botão menu no cabeçalho ===== */
+#info-right {
+    display: flex;
+    gap: 6px;
+}
+
+#menu-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#menu-btn:active {
+    transform: scale(0.95);
+}
+
+/* ===== lobby (escolha de modo / sala online) ===== */
+#lobby {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 400;
+    padding: 16px;
+}
+
+#lobby-box {
+    width: min(92vw, 380px);
+    text-align: center;
+    background: var(--bg-mid);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 18px;
+    padding: 24px 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+#lobby-box h2 {
+    font-size: 24px;
+    letter-spacing: 0.5px;
+}
+
+.lobby-sub {
+    opacity: 0.7;
+    font-size: 14px;
+    margin: 4px 0 18px;
+}
+
+.lobby-view {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lobby-label {
+    font-size: 13px;
+    opacity: 0.8;
+    text-align: left;
+}
+
+#lobby input {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+}
+
+#lobby input:focus {
+    border-color: #e94560;
+}
+
+#join-code {
+    text-align: center;
+    letter-spacing: 6px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.lobby-btn {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.lobby-btn.primary {
+    background: #e94560;
+    border-color: #e94560;
+}
+
+.lobby-btn.ghost {
+    background: transparent;
+    border-color: transparent;
+    opacity: 0.75;
+    font-weight: 600;
+}
+
+.lobby-btn:active {
+    transform: scale(0.97);
+}
+
+#room-code {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 8px;
+    padding: 10px 0 10px 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    user-select: all;
+}
+
+.lobby-msg {
+    font-size: 13px;
+    opacity: 0.85;
+    min-height: 18px;
+}
+
+.lobby-msg.error {
+    color: #ff8a8a;
+    opacity: 1;
+}

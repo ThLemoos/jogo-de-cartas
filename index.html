@@ -25,7 +25,7 @@
             <div id="info-left">
                 <div class="player-tag cpu-tag">
                     <span class="dot" id="cpu-dot"></span>
-                    CPU
+                    <span id="cpu-name">CPU</span>
                     <span class="card-count" id="cpu-count">0</span>
                 </div>
             </div>
@@ -33,7 +33,8 @@
                 <span id="active-color-pill">—</span>
             </div>
             <div id="info-right">
-                <button id="restart-btn" onclick="initGame()">↺</button>
+                <button id="menu-btn" onclick="backToMenu()" aria-label="Menu">☰</button>
+                <button id="restart-btn" onclick="restartClicked()" aria-label="Reiniciar">↺</button>
             </div>
         </header>
 
@@ -69,6 +70,38 @@
 
     </div>
 
+    <div id="lobby">
+        <div id="lobby-box">
+            <h2>Jogo de Cartas</h2>
+            <p class="lobby-sub">Sandy, a curiosinha</p>
+
+            <div id="lobby-menu" class="lobby-view">
+                <label class="lobby-label" for="player-name">Seu nome</label>
+                <input id="player-name" maxlength="16" placeholder="Como te chamam?" autocomplete="off" />
+                <button class="lobby-btn primary" onclick="startCpuGame()">🤖 Jogar contra a CPU</button>
+                <button class="lobby-btn" onclick="hostRoom()">🌐 Criar sala online</button>
+                <button class="lobby-btn" onclick="lobbyView('join')">🔗 Entrar com código</button>
+            </div>
+
+            <div id="lobby-host" class="lobby-view" style="display:none">
+                <p>Passe este código para seu amigo:</p>
+                <div id="room-code">·····</div>
+                <button class="lobby-btn" onclick="copyInvite()">📋 Copiar link de convite</button>
+                <p id="host-msg" class="lobby-msg">Criando sala...</p>
+                <button class="lobby-btn ghost" onclick="lobbyView('menu')">← Voltar</button>
+            </div>
+
+            <div id="lobby-join" class="lobby-view" style="display:none">
+                <label class="lobby-label" for="join-code">Código da sala</label>
+                <input id="join-code" maxlength="8" placeholder="EX: K7P2M" autocomplete="off"
+                    autocapitalize="characters" />
+                <button class="lobby-btn primary" onclick="joinRoom()">Entrar na sala</button>
+                <p id="join-msg" class="lobby-msg"></p>
+                <button class="lobby-btn ghost" onclick="lobbyView('menu')">← Voltar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="overlay" style="display:none">
         <div id="color-picker">
             <p>Escolha uma cor</p>
@@ -98,7 +131,9 @@
         </div>
     </div>
 
+    <script src="js/peerjs.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/online.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
