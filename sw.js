@@ -1,4 +1,4 @@
-const CACHE = 'jogo-de-cartas-v2';
+const CACHE = 'jogo-de-cartas-v3';
 const ARQUIVOS = [
   './',
   './index.html',
